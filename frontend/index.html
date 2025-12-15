@@ -1,0 +1,127 @@
+<!-- frontend/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise AI Search System</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-search"></i>
+                <h1>Enterprise AI Search System</h1>
+            </div>
+            <div class="header-info">
+                <span class="status-badge" id="statusBadge">
+                    <i class="fas fa-circle"></i> Checking...
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container main-container">
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <h2><i class="fas fa-upload"></i> Upload Document</h2>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                    <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                    <p class="upload-text">Drag & drop your document here or click to browse</p>
+                    <p class="upload-subtext">Supported formats: PDF, TXT, DOCX (Max 10MB)</p>
+                    <input type="file" id="fileInput" accept=".pdf,.txt,.docx" hidden>
+                    <button class="btn btn-primary" id="browseBtn">
+                        <i class="fas fa-folder-open"></i> Browse Files
+                    </button>
+                </div>
+            </div>
+            <div class="upload-progress" id="uploadProgress" style="display: none;">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="progress-text" id="progressText">Processing...</p>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <h2><i class="fas fa-search"></i> Search Documents</h2>
+            <div class="search-box">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Ask a question about your documents..."
+                    class="search-input"
+                >
+                <div class="search-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="useRAG" checked>
+                        <span>Use AI Answer Generation (RAG)</span>
+                    </label>
+                    <label class="results-label">
+                        Top Results:
+                        <select id="topK" class="top-k-select">
+                            <option value="3">3</option>
+                            <option value="5" selected>5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                        </select>
+                    </label>
+                </div>
+                <button class="btn btn-search" id="searchBtn">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <!-- RAG Answer -->
+            <div class="rag-answer" id="ragAnswer" style="display: none;">
+                <h3><i class="fas fa-robot"></i> AI-Generated Answer</h3>
+                <div class="answer-content" id="answerContent"></div>
+            </div>
+
+            <!-- Search Results -->
+            <div class="search-results">
+                <h3><i class="fas fa-list"></i> Relevant Documents</h3>
+                <div class="results-info">
+                    <span id="resultsCount">0 results</span>
+                    <span id="searchTime"></span>
+                </div>
+                <div class="results-list" id="resultsList"></div>
+            </div>
+        </section>
+
+        <!-- Documents Library -->
+        <section class="documents-section">
+            <h2><i class="fas fa-file-alt"></i> Document Library</h2>
+            <button class="btn btn-secondary" id="refreshBtn">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+            <div class="documents-list" id="documentsList">
+                <p class="empty-state">No documents uploaded yet</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
