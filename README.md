@@ -68,62 +68,92 @@ An AI-powered document search engine using semantic search, vector embeddings, a
 
 ┌─────────────┐
 │ Frontend │ (HTML/CSS/JS)
-└──────┬──────┘
-│
-┌──────▼──────┐
-│ FastAPI │ (Python Backend)
-└──────┬──────┘
-│
-┌───┴────┬──────────┬──────────┐
-│ │ │ │
-┌──▼──┐ ┌──▼──────┐ ┌─▼────┐ ┌──▼──────┐
-│ PDF │ │ MongoDB │ │OpenAI│ │ Groq │
-│Parse│ │ Vector │ │Embed │ │ LLM │
-└─────┘ └─────────┘ └──────┘ └─────────┘
+# RAG Demo
 
+Minimal Retrieval-Augmented Generation (RAG) demo that demonstrates semantic search and simple RAG workflows.
 
-## 📋 Prerequisites
+Key points
+- Backend: FastAPI + SQLAlchemy + FAISS (in-memory index)
+- Frontend: Minimal static HTML/CSS/JS demo
+- Purpose: educational/demo — not production-ready
 
-- Python 3.9 or higher
-- MongoDB Atlas account (free tier works)
-- OpenAI API key
-- Groq API key (optional, for faster LLM)
+Repository structure
 
-## 🚀 Installation
+```
+rag_app/
+├─ backend/            # FastAPI app, models, services, requirements
+├─ frontend/           # Static demo UI (index.html, style.css, script.js)
+├─ Makefile            # Convenience commands (venv, run, docker)
+├─ docker-compose.yml  # Local compose for backend + static frontend
+├─ LICENSE
+├─ CONTRIBUTING.md
+└─ README.md           # This file
+```
 
-### 1. Clone the Repository
+Quick start (local Python)
 
-git clone https://github.com/yourusername/semantic-document-search.git
-cd semantic-document-search
+1. Create a virtual environment and install dependencies
 
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r backend/requirements.txt
+```
 
-### 2. Set Up Backend
+2. Copy example env and adjust
 
-cd backend
+```bash
+cp backend/.env.example backend/.env
+# edit backend/.env as needed
+```
 
-Create virtual environment
-python -m venv venv
+3. Run backend (development)
 
-Activate virtual environment
-On Windows:
-venv\Scripts\activate
+```bash
+uvicorn backend.app.main:app --reload --port 8000
+```
 
-On macOS/Linux:
-source venv/bin/activate
+4. Serve frontend (simple static server)
 
-Install dependencies
-pip install -r requirements.txt
+```bash
+python -m http.server 8080 --directory frontend
+# then open http://localhost:8080
+```
 
-### 3. Configure Environment Variables
+Docker (optional)
 
-Create a `.env` file in the `backend/` directory:
+```bash
+docker-compose up --build
+```
 
-cp .env.example .env
+Helpful targets (Makefile)
 
-Edit `.env` with your credentials:
+```bash
+make venv        # create virtualenv
+make install     # install backend deps into .venv
+make run-backend # run uvicorn
+make run-frontend# serve frontend on :8080
+```
 
-MongoDB Configuration
-MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/
+Notes
+- The FAISS index is currently in-memory; for production persist the index and metadata.
+- Add CORS, authentication, and proper error handling before deploying.
+
+Contributing
+
+See `CONTRIBUTING.md` for contribution guidelines. Keep changes focused and include tests where appropriate.
+
+License
+
+This project is licensed under the MIT License. See `LICENSE`.
+
+Contact
+
+If you have questions or issues, open an issue or email: praveenjit8484@gmail.com
+
+---
+
+If you'd like, I can now: add a simple CI workflow, enable CORS in the backend, or create a small test to verify the backend endpoints.
 DATABASE_NAME=document_search
 COLLECTION_NAME=document_chunks
 
@@ -393,7 +423,7 @@ This project is licensed under the MIT License.
 
 For issues and questions:
 - Open an issue on GitHub
-- Email: praveenjit8484@.com
+- Email: praveenjit8484@gmail.com
 
 ---
 
