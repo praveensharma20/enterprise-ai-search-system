@@ -1,3 +1,49 @@
+# RAG Demo Project
+
+Minimal Retrieval-Augmented Generation (RAG) demo using a FastAPI backend and a simple static frontend.
+Repository layout
+
+```
+Quick start (local Python)
+
+1. Create a virtualenv and install dependencies:
+```bash
+python -m venv .venv
+source .venv/bin/activate
+2. Copy `.env.example` to `backend/.env` and adjust settings.
+
+3. Run the backend:
+```bash
+uvicorn backend.app.main:app --reload --port 8000
+```
+4. Serve the frontend (from repo root):
+
+```bash
+python -m http.server 8080 --directory frontend
+```
+Docker
+
+```bash
+docker-compose up --build
+```
+Notes
+- The FAISS index and document metadata are kept in-memory for this demo. Persist the index and DB for production.
+- See `backend/README.md` and `frontend/README.md` for more details.
+
+License
+
+This project is provided under the MIT license. See the `LICENSE` file.
+# Enterprise AI Search System
+
+![Python](https://img.shields.io/badge/Python-3.8+-blue)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)
+![License](https://img.shields.io/badge/License-MIT-yellow)
+
+AI-powered semantic document search engine with RAG capabilities.
+
+[View Live Demo](#) | [Documentation](#installation)
+
+
 # 🔍 Semantic Document Search Engine
 
 An AI-powered document search engine using semantic search, vector embeddings, and Retrieval-Augmented Generation (RAG) for intelligent information retrieval from enterprise documents.
@@ -332,8 +378,8 @@ This project is licensed under the MIT License.
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
+- GitHub: [@yourusername](https://github.com/praveensharma20)
+- LinkedIn: [Your Name](https://www.linkedin.com/in/praveen-kumar1828/)
 
 ## 🙏 Acknowledgments
 
@@ -347,7 +393,7 @@ This project is licensed under the MIT License.
 
 For issues and questions:
 - Open an issue on GitHub
-- Email: your.email@example.com
+- Email: praveenjit8484@.com
 
 ---
 
