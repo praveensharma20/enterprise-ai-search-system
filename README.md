@@ -154,21 +154,14 @@ If you have questions or issues, open an issue or email: praveenjit8484@gmail.co
 ---
 
 If you'd like, I can now: add a simple CI workflow, enable CORS in the backend, or create a small test to verify the backend endpoints.
-DATABASE_NAME=document_search
-COLLECTION_NAME=document_chunks
 
-OpenAI API Key
-OPENAI_API_KEY=sk-your-openai-api-key-here
+## Author
 
-Groq API Key (optional - faster LLM)
-GROQ_API_KEY=gsk_your-groq-api-key-here
+👤 **Your Name**
 
-Application Settings
-MAX_FILE_SIZE=10485760
-CHUNK_SIZE=500
-CHUNK_OVERLAP=50
+- GitHub: [@yourusername](https://github.com/praveensharma20)
+- LinkedIn: [Your Name](https://www.linkedin.com/in/praveen-kumar1828/)
 
-text
 
 ### 4. Set Up MongoDB Atlas Vector Search
 
