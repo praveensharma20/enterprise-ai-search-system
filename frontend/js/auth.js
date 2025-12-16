@@ -60,7 +60,7 @@ if (loginForm) {
                 localStorage.setItem('token', data.access_token);
                 localStorage.setItem('user', JSON.stringify(data.user));
                 // Redirect to dashboard
-                window.location.href = 'dashboard.html';
+                window.location.href = '/pages/dashboard.html';
             } else {
                 alert(data.detail || 'Login failed');
             }

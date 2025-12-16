@@ -277,6 +277,15 @@ body {
     padding: 2rem;
 }
 
+/* ✅ NEW: Section Management */
+.dashboard-section {
+    display: none;
+}
+
+.dashboard-section.active {
+    display: block;
+}
+
 /* Welcome Section */
 .welcome-section {
     margin-bottom: 2rem;
@@ -670,7 +679,54 @@ body {
     color: #fff;
 }
 
-/* ✅ ADDED: Notification Styles */
+/* ✅ NEW: Search Container */
+.search-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#searchInputMain {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #E5E7EB;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+#searchInputMain:focus {
+    outline: none;
+    border-color: #7C3AED;
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+#searchBtnMain {
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #7C3AED 0%, #9F67FF 100%);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+#searchBtnMain:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+}
+
+#uploadBtnAlt {
+    margin-left: auto;
+}
+
+/* ✅ Notification Styles */
 .notification {
     position: fixed;
     top: 20px;
@@ -717,7 +773,7 @@ body {
     color: #92400E;
 }
 
-/* ✅ ADDED: Search Results Styles */
+/* ✅ Search Results Styles */
 #searchResults {
     margin-top: 1.5rem;
 }
@@ -788,7 +844,7 @@ body {
     font-style: italic;
 }
 
-/* ✅ ADDED: Document List Styles */
+/* ✅ Document List Styles */
 #documentsList {
     display: flex;
     flex-direction: column;
@@ -856,7 +912,7 @@ body {
     font-style: italic;
 }
 
-/* ✅ ADDED: File Input Hidden */
+/* ✅ File Input Hidden */
 #fileInput {
     display: none;
 }
@@ -894,5 +950,13 @@ body {
     .notification {
         max-width: 90%;
         right: 5%;
+    }
+    
+    .dashboard-container {
+        padding: 1rem;
+    }
+    
+    .search-bar {
+        max-width: 100%;
     }
 }

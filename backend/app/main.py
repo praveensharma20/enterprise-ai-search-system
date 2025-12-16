@@ -22,7 +22,7 @@ from app.embedding_service import embedding_service
 from app.search_service import search_service
 from app.rag_service import rag_service
 
-# ✅ ADD: Import auth routes
+# ✅ Import auth routes
 from app.auth import routes as auth_routes
 
 logging.basicConfig(level=logging.INFO)
@@ -35,13 +35,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS middleware
+# ✅ ENHANCED CORS Configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allow all methods
+    allow_headers=["*"],  # Allow all headers
+    expose_headers=["*"]  # Expose all headers
 )
 
 # Create uploads directory
@@ -54,8 +55,7 @@ doc_processor = DocumentProcessor(
     chunk_overlap=settings.chunk_overlap
 )
 
-# ✅ ADD: Setup auth database and router
-#auth_routes.db = db.db
+# ✅ Setup auth router
 app.include_router(auth_routes.router)
 
 @app.on_event("startup")
@@ -88,7 +88,8 @@ async def health_check():
         # Check database connection
         db.client.admin.command('ping')
         db_connected = True
-    except:
+    except Exception as e:
+        logger.error(f"Database health check failed: {e}")
         db_connected = False
     
     return HealthCheckResponse(
@@ -101,6 +102,7 @@ async def health_check():
 async def upload_document(file: UploadFile = File(...)):
     """Upload and process a document"""
     start_time = time.time()
+    file_path = None
     
     try:
         # Validate file type
@@ -135,6 +137,12 @@ async def upload_document(file: UploadFile = File(...)):
         # Process document (extract and chunk)
         chunks = doc_processor.process_document(file_path, file.content_type)
         
+        if not chunks:
+            raise HTTPException(
+                status_code=400,
+                detail="Could not extract text from document"
+            )
+        
         # Generate embeddings for chunks
         chunk_texts = [chunk['content'] for chunk in chunks]
         embeddings = embedding_service.generate_embeddings_batch(chunk_texts)
@@ -160,7 +168,8 @@ async def upload_document(file: UploadFile = File(...)):
         db.insert_chunks(chunks_data)
         
         # Clean up temporary file
-        os.remove(file_path)
+        if os.path.exists(file_path):
+            os.remove(file_path)
         
         processing_time = time.time() - start_time
         
@@ -175,12 +184,17 @@ async def upload_document(file: UploadFile = File(...)):
             processing_time=round(processing_time, 2)
         )
         
+    except HTTPException:
+        raise
     except Exception as e:
-        logger.error(f"❌ Error uploading document: {e}")
+        logger.error(f"❌ Error uploading document: {e}", exc_info=True)
         # Clean up file if it exists
-        if 'file_path' in locals() and os.path.exists(file_path):
-            os.remove(file_path)
-        raise HTTPException(status_code=500, detail=str(e))
+        if file_path and os.path.exists(file_path):
+            try:
+                os.remove(file_path)
+            except:
+                pass
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 @app.post("/search", response_model=SearchResponse, tags=["Search"])
 async def search_documents(search_query: SearchQuery):
@@ -225,13 +239,14 @@ async def search_documents(search_query: SearchQuery):
         )
         
     except Exception as e:
-        logger.error(f"❌ Search error: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"❌ Search error: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
 
 @app.get("/documents", response_model=DocumentListResponse, tags=["Documents"])
 async def list_documents():
     """Get list of all uploaded documents"""
     try:
+        logger.info("📋 Fetching documents list...")
         documents = db.get_all_documents()
         
         doc_list = [
@@ -245,23 +260,28 @@ async def list_documents():
             for doc in documents
         ]
         
+        logger.info(f"✅ Found {len(doc_list)} documents")
+        
         return DocumentListResponse(
             documents=doc_list,
             total_count=len(doc_list)
         )
         
     except Exception as e:
-        logger.error(f"❌ Error listing documents: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"❌ Error listing documents: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Failed to list documents: {str(e)}")
 
 @app.delete("/documents/{document_id}", tags=["Documents"])
 async def delete_document(document_id: str):
     """Delete a document and all its chunks"""
     try:
+        logger.info(f"🗑️  Deleting document: {document_id}")
         deleted_count = db.delete_document(document_id)
         
         if deleted_count == 0:
             raise HTTPException(status_code=404, detail="Document not found")
+        
+        logger.info(f"✅ Deleted {deleted_count} chunks")
         
         return {
             "success": True,
@@ -272,8 +292,8 @@ async def delete_document(document_id: str):
     except HTTPException:
         raise
     except Exception as e:
-        logger.error(f"❌ Error deleting document: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+        logger.error(f"❌ Error deleting document: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Delete failed: {str(e)}")
 
 @app.get("/info", tags=["Info"])
 async def get_info():
@@ -284,8 +304,23 @@ async def get_info():
         "chunk_size": settings.chunk_size,
         "chunk_overlap": settings.chunk_overlap,
         "max_file_size_mb": settings.max_file_size / 1024 / 1024,
-        "supported_formats": ["PDF", "TXT", "DOCX"]
+        "supported_formats": ["PDF", "TXT", "DOCX"],
+        "cors_enabled": True,
+        "api_version": "1.0.0"
     }
+
+# ✅ Add OPTIONS handler for preflight requests
+@app.options("/{full_path:path}")
+async def options_handler(full_path: str):
+    """Handle CORS preflight requests"""
+    return JSONResponse(
+        content={"message": "OK"},
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*",
+        }
+    )
 
 if __name__ == "__main__":
     import uvicorn
