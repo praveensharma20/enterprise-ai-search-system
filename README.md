@@ -1,304 +1,319 @@
-# RAG Demo Project
+# 🔍 Enterprise AI Search System
 
-Minimal Retrieval-Augmented Generation (RAG) demo using a FastAPI backend and a simple static frontend.
-Repository layout
+> AI-powered semantic document search engine with RAG capabilities, JWT authentication, and modern UI
 
-```
-Quick start (local Python)
+![Python](https://img.shields.io/badge/Python-3.12+-blue?style=for-the-badge&logo=python)
+![FastAPI](https://img.shields.io/badge/FastAPI-0.104-green?style=for-the-badge&logo=fastapi)
+![MongoDB](https://img.shields.io/badge/MongoDB-7.0-darkgreen?style=for-the-badge&logo=mongodb)
+![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-1. Create a virtualenv and install dependencies:
-```bash
-python -m venv .venv
-source .venv/bin/activate
-2. Copy `.env.example` to `backend/.env` and adjust settings.
+An intelligent document search system that uses semantic embeddings, vector search, and Retrieval-Augmented Generation (RAG) to provide accurate, context-aware answers from your document library.
 
-3. Run the backend:
-```bash
-uvicorn backend.app.main:app --reload --port 8000
-```
-4. Serve the frontend (from repo root):
-
-```bash
-python -m http.server 8080 --directory frontend
-```
-Docker
-
-```bash
-docker-compose up --build
-```
-Notes
-- The FAISS index and document metadata are kept in-memory for this demo. Persist the index and DB for production.
-- See `backend/README.md` and `frontend/README.md` for more details.
-
-License
-
-This project is provided under the MIT license. See the `LICENSE` file.
-# Enterprise AI Search System
-
-![Python](https://img.shields.io/badge/Python-3.8+-blue)
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-
-AI-powered semantic document search engine with RAG capabilities.
-
-[View Live Demo](#) | [Documentation](#installation)
-
-
-# 🔍 Semantic Document Search Engine
-
-An AI-powered document search engine using semantic search, vector embeddings, and Retrieval-Augmented Generation (RAG) for intelligent information retrieval from enterprise documents.
-
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![FastAPI](https://img.shields.io/badge/FastAPI-0.109+-green.svg)
-![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-brightgreen.svg)
-![License](https://img.shields.io/badge/License-MIT-yellow.svg)
-
-## 🌟 Features
-
-- **Semantic Search**: Find documents by meaning, not just keywords
-- **AI-Powered Answers**: RAG-based answer generation using Groq/OpenAI
-- **Multi-Format Support**: PDF, DOCX, TXT files
-- **Vector Embeddings**: OpenAI embeddings for semantic understanding
-- **Fast Search**: MongoDB Atlas Vector Search for sub-second queries
-- **Modern UI**: Clean, responsive web interface
-- **Document Management**: Upload, view, and delete documents
-- **Real-time Processing**: Async document processing with progress tracking
-
-## 🏗️ Architecture
-
-┌─────────────┐
-│ Frontend │ (HTML/CSS/JS)
-# RAG Demo
-
-Minimal Retrieval-Augmented Generation (RAG) demo that demonstrates semantic search and simple RAG workflows.
-
-Key points
-- Backend: FastAPI + SQLAlchemy + FAISS (in-memory index)
-- Frontend: Minimal static HTML/CSS/JS demo
-- Purpose: educational/demo — not production-ready
-
-Repository structure
-
-```
-rag_app/
-├─ backend/            # FastAPI app, models, services, requirements
-├─ frontend/           # Static demo UI (index.html, style.css, script.js)
-├─ Makefile            # Convenience commands (venv, run, docker)
-├─ docker-compose.yml  # Local compose for backend + static frontend
-├─ LICENSE
-├─ CONTRIBUTING.md
-└─ README.md           # This file
-```
-
-Quick start (local Python)
-
-1. Create a virtual environment and install dependencies
-
-```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -r backend/requirements.txt
-```
-
-2. Copy example env and adjust
-
-```bash
-cp backend/.env.example backend/.env
-# edit backend/.env as needed
-```
-
-3. Run backend (development)
-
-```bash
-uvicorn backend.app.main:app --reload --port 8000
-```
-
-4. Serve frontend (simple static server)
-
-```bash
-python -m http.server 8080 --directory frontend
-# then open http://localhost:8080
-```
-
-Docker (optional)
-
-```bash
-docker-compose up --build
-```
-
-Helpful targets (Makefile)
-
-```bash
-make venv        # create virtualenv
-make install     # install backend deps into .venv
-make run-backend # run uvicorn
-make run-frontend# serve frontend on :8080
-```
-
-Notes
-- The FAISS index is currently in-memory; for production persist the index and metadata.
-- Add CORS, authentication, and proper error handling before deploying.
-
-Contributing
-
-See `CONTRIBUTING.md` for contribution guidelines. Keep changes focused and include tests where appropriate.
-
-License
-
-This project is licensed under the MIT License. See `LICENSE`.
-
-Contact
-
-If you have questions or issues, open an issue or email: praveenjit8484@gmail.com
+[🚀 Live Demo](#) | [📖 Documentation](#-features) | [🐛 Report Bug](https://github.com/praveensharma20/enterprise-ai-search/issues)
 
 ---
 
-If you'd like, I can now: add a simple CI workflow, enable CORS in the backend, or create a small test to verify the backend endpoints.
+## ✨ Features
 
-## Author
+### 🤖 **AI-Powered Intelligence**
+- **Semantic Search**: Find information by meaning, not just keywords
+- **RAG Technology**: Get accurate AI-generated answers from your documents
+- **Vector Embeddings**: Using sentence-transformers for local embedding generation
+- **Multi-Format Support**: PDF, DOCX, and TXT files
+- **Smart Chunking**: Intelligent document segmentation with overlap
 
-👤 **Your Name**
+### 🔐 **Security & Authentication**
+- **JWT Authentication**: Secure token-based user authentication
+- **Password Security**: Bcrypt hashing for password protection
+- **Protected Routes**: Role-based access control
+- **Session Management**: Persistent login sessions
 
-- GitHub: [@yourusername](https://github.com/praveensharma20)
-- LinkedIn: [Your Name](https://www.linkedin.com/in/praveen-kumar1828/)
+### 📊 **Document Management**
+- **Upload & Process**: Automatic text extraction and indexing
+- **Real-time Search**: Sub-second query responses
+- **Document Library**: View, manage, and delete documents
+- **Storage Tracking**: Monitor document count and storage usage
+
+### 🎨 **Modern User Interface**
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Dark Mode**: Eye-friendly dark theme support
+- **Real-time Notifications**: User feedback for all actions
+- **Gradient UI**: Beautiful, modern interface design
+
+---
+
+## 🏗️ Architecture
+
+┌─────────────────┐
+│ Frontend │ HTML/CSS/JS
+│ (Static Files) │
+└────────┬────────┘
+│ HTTPS
+▼
+┌─────────────────┐
+│ FastAPI │ REST API
+│ Backend │ JWT Auth
+└────────┬────────┘
+│
+┌────┴────┬──────────┐
+▼ ▼ ▼
+┌────────┐ ┌──────┐ ┌─────────┐
+│MongoDB │ │ NLP │ │ Gemini │
+│ Atlas │ │Model │ │ API │
+└────────┘ └──────┘ └─────────┘
 
 
-### 4. Set Up MongoDB Atlas Vector Search
+---
 
-1. Create a free MongoDB Atlas account at https://www.mongodb.com/cloud/atlas
-2. Create a new cluster (M0 free tier is sufficient)
-3. Create a database named `document_search`
-4. Create a collection named `document_chunks`
-5. Create a Vector Search Index:
-   - Go to Atlas Search → Create Search Index
-   - Choose "JSON Editor"
-   - Use this configuration:
+## 📁 Project Structure
 
-{
-"mappings": {
-"dynamic": true,
-"fields": {
-"embedding": {
-"type": "knnVector",
-"dimensions": 1536,
-"similarity": "cosine"
-}
-}
-}
-}
+rag_app/
+├── backend/
+│ ├── app/
+│ │ ├── auth/ # 🔐 Authentication module
+│ │ │ ├── init.py
+│ │ │ ├── models.py # User data models
+│ │ │ ├── routes.py # Auth API endpoints
+│ │ │ ├── schemas.py # Request/response schemas
+│ │ │ └── utils.py # JWT & password utilities
+│ │ ├── main.py # FastAPI application
+│ │ ├── config.py # Configuration settings
+│ │ ├── database.py # MongoDB connection
+│ │ ├── models.py # Document models
+│ │ ├── document_processor.py # PDF/DOCX/TXT processing
+│ │ ├── embedding_service.py # Vector embeddings
+│ │ ├── search_service.py # Semantic search
+│ │ └── rag_service.py # RAG answer generation
+│ ├── uploads/ # Temporary file storage
+│ ├── venv/ # Python virtual environment
+│ ├── requirements.txt # Python dependencies
+│ └── .env # Environment variables
+├── frontend/
+│ ├── index.html # Landing page
+│ ├── pages/
+│ │ ├── login.html # User login
+│ │ ├── signup.html # User registration
+│ │ └── dashboard.html # Main application
+│ ├── css/
+│ │ ├── style.css # Landing page styles
+│ │ ├── auth.css # Authentication styles
+│ │ └── dashboard.css # Dashboard styles
+│ └── js/
+│ ├── auth.js # Auth logic
+│ └── dashboard.js # Dashboard functionality
+├── .gitignore
+└── README.md
 
-text
 
-## ▶️ Running the Application
+---
 
-### Start Backend Server
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Python 3.12+**
+- **MongoDB** (local or Atlas)
+- **Git**
+
+### 1️⃣ Clone Repository
+
+git clone https://github.com/praveensharma20/enterprise-ai-search.git
+cd enterprise-ai-search
+
+
+### 2️⃣ Backend Setup
 
 cd backend
-python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
-text
+Create virtual environment
+python3 -m venv venv
+source venv/bin/activate # Windows: venv\Scripts\activate
 
-Backend will run at: `http://localhost:8000`
+Install dependencies
+pip install -r requirements.txt
 
-API Documentation: `http://localhost:8000/docs`
+Create environment file
+cp .env.example .env
+nano .env # Edit with your settings
 
-### Start Frontend
 
-Open `frontend/index.html` in your browser, or use a simple HTTP server:
+**Required `.env` Configuration:**
+Database
+MONGODB_URL=mongodb://localhost:27017
+DATABASE_NAME=document_search
+COLLECTION_NAME=document_chunks
+
+JWT Authentication
+SECRET_KEY=your-super-secret-key-change-this-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+OpenAI (Optional - for embeddings)
+OPENAI_API_KEY=sk-your-openai-key
+
+Groq (Optional - for faster LLM)
+GROQ_API_KEY=gsk_your-groq-key
+
+Gemini (Optional - for AI answers)
+GEMINI_API_KEY=your-gemini-key
+
+Server
+HOST=0.0.0.0
+PORT=8000
+
+
+### 3️⃣ Start MongoDB
+
+Ubuntu/Linux
+sudo systemctl start mongod
+sudo systemctl enable mongod
+
+Verify
+mongosh --eval "db.adminCommand('ping')"
+
+
+### 4️⃣ Run Backend
+
+cd backend
+source venv/bin/activate
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+
+
+✅ Backend running at: [**http://localhost:8000**](http://localhost:8000)
+
+✅ API Docs: [**http://localhost:8000/docs**](http://localhost:8000/docs)
+
+### 5️⃣ Open Frontend
 
 cd frontend
 
-Using Python
-python -m http.server 3000
+Option 1: Direct open
+xdg-open index.html # Linux
+open index.html # macOS
 
-Or using Node.js
+Option 2: Python server
+python3 -m http.server 3000
+
+Option 3: Node.js serve
 npx serve
 
-text
 
-Frontend will run at: `http://localhost:3000`
+✅ Frontend: [**http://localhost:3000**](http://localhost:3000) (if using server)
 
-## 🐳 Docker Deployment (Optional)
-
-### Using Docker Compose
-
-docker-compose up -d
-
-text
-
-This will start:
-- Backend API on port 8000
-- Frontend on port 3000
+---
 
 ## 📖 Usage Guide
 
-### 1. Upload Documents
+### 1. **Create Account**
+- Navigate to signup page
+- Enter full name, email, and password
+- Click "Create Account"
 
-- Click "Browse Files" or drag & drop documents
-- Supported formats: PDF, TXT, DOCX
-- Maximum file size: 10MB
-- Documents are automatically processed and chunked
+### 2. **Login**
+- Enter your credentials
+- Get JWT token automatically
+- Redirected to dashboard
 
-### 2. Search Documents
+### 3. **Upload Documents**
+- Click "Upload Document" button
+- Select PDF, DOCX, or TXT file (max 10MB)
+- Wait for processing notification
+- Document appears in library
 
-- Enter your question in natural language
-- Toggle "Use AI Answer Generation" for RAG-based answers
-- Adjust "Top Results" to control result count
-- Click "Search" or press Enter
+### 4. **Search Documents**
+- Enter your question in the search bar
+- Press Enter or click Search
+- View AI-generated answer
+- See relevant document chunks with similarity scores
 
-### 3. View Results
-
-- **AI-Generated Answer**: Comprehensive answer from all relevant documents
-- **Relevant Documents**: Individual document chunks with similarity scores
-- **Source Citations**: Each result shows the source file and chunk number
-
-### 4. Manage Documents
-
-- View all uploaded documents in the Document Library
+### 5. **Manage Documents**
+- View all documents in Documents section
 - See chunk count and upload date
-- Delete documents when no longer needed
+- Delete unwanted documents
+- Track total documents uploaded
 
-## 🔧 API Endpoints
+### 6. **Logout**
+- Click logout button in sidebar
+- Confirm logout
+- Redirected to login page
 
-### Health Check
-GET /health
+---
 
-text
+## 🔌 API Endpoints
 
-### Upload Document
-POST /upload
-Content-Type: multipart/form-data
+### Authentication
 
-file: <document_file>
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/api/auth/signup` | Register new user | ❌ |
+| POST | `/api/auth/login` | Login user | ❌ |
+| GET | `/api/auth/me` | Get current user | ✅ |
+| POST | `/api/auth/logout` | Logout user | ✅ |
 
-text
+### Documents
 
-### Search Documents
-POST /search
-Content-Type: application/json
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/upload` | Upload document | ❌ |
+| GET | `/documents` | List all documents | ❌ |
+| DELETE | `/documents/{id}` | Delete document | ❌ |
 
-{
-"query": "your search query",
+### Search
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/search` | Semantic search | ❌ |
+
+### System
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| GET | `/health` | Health check | ❌ |
+| GET | `/info` | System information | ❌ |
+
+---
+
+## 🧪 Testing
+
+### Test Signup (cURL)
+
+curl -X POST "http://localhost:8000/api/auth/signup"
+-H "Content-Type: application/json"
+-d '{
+"full_name": "Test User",
+"email": "test@example.com",
+"password": "SecurePass123"
+}'
+
+
+### Test Login
+
+curl -X POST "http://localhost:8000/api/auth/login"
+-H "Content-Type: application/json"
+-d '{
+"email": "test@example.com",
+"password": "SecurePass123"
+}'
+
+
+### Test Document Upload
+
+curl -X POST "http://localhost:8000/upload"
+-F "file=@sample.pdf"
+
+
+### Test Search
+
+curl -X POST "http://localhost:8000/search"
+-H "Content-Type: application/json"
+-d '{
+"query": "What is machine learning?",
 "top_k": 5,
 "use_rag": true
-}
+}'
 
-text
 
-### List Documents
-GET /documents
-
-text
-
-### Delete Document
-DELETE /documents/{document_id}
-
-text
-
-### System Info
-GET /info
-
-text
+---
 
 ## 🛠️ Configuration
 
@@ -309,115 +324,109 @@ Edit in `config.py`:
 chunk_size = 500 # Words per chunk
 chunk_overlap = 50 # Overlap between chunks
 
-text
-
-### Embedding Model
-
-Change in `config.py`:
-
-embedding_model = "text-embedding-3-small" # or text-embedding-3-large
-embedding_dimensions = 1536
-
-text
 
 ### Search Parameters
 
 top_k_results = 5 # Number of results
-similarity_threshold = 0.7 # Minimum similarity score
+similarity_threshold = 0.7 # Minimum score
 
-text
 
-## 📊 Performance Tips
-
-1. **Batch Processing**: Upload multiple documents at once
-2. **Chunk Size**: Smaller chunks (300-500 words) work best
-3. **Caching**: Implement Redis for frequently searched queries
-4. **Indexing**: Ensure MongoDB vector index is properly configured
-5. **API Rate Limits**: Monitor OpenAI/Groq usage
-
-## 🧪 Testing
-
-### Test Document Upload
-curl -X POST "http://localhost:8000/upload"
--H "Content-Type: multipart/form-data"
--F "file=@test.pdf"
-
-text
-
-### Test Search
-curl -X POST "http://localhost:8000/search"
--H "Content-Type: application/json"
--d '{"query": "What is machine learning?", "top_k": 5, "use_rag": true}'
-
-text
+---
 
 ## 🐛 Troubleshooting
 
 ### MongoDB Connection Failed
-- Check MongoDB URL in `.env`
-- Ensure IP address is whitelisted in Atlas
-- Verify database user has read/write permissions
+- ✅ Check `MONGODB_URL` in `.env`
+- ✅ Verify MongoDB is running: `sudo systemctl status mongod`
+- ✅ Test connection: `mongosh`
 
-### Embedding Generation Error
-- Verify OpenAI API key is valid
-- Check API usage limits and billing
-- Ensure text is not too long (max 8191 tokens)
+### Authentication Not Working
+- ✅ Check `SECRET_KEY` is set in `.env`
+- ✅ Clear browser localStorage
+- ✅ Check backend logs for errors
 
 ### Search Returns No Results
-- Check if documents are uploaded
-- Verify vector index is created in MongoDB
-- Lower similarity threshold
+- ✅ Upload documents first
+- ✅ Wait for processing to complete
+- ✅ Check embedding model is loaded
 
-### RAG Answer Not Generated
-- Check Groq/OpenAI API key
-- Ensure search returns results first
-- Verify LLM model availability
+### File Upload Fails
+- ✅ Check file size < 10MB
+- ✅ Verify file type (PDF/DOCX/TXT)
+- ✅ Check `uploads/` directory permissions
 
-## 📈 Future Enhancements
+---
 
-- [ ] Multi-language support
-- [ ] Image and table extraction
-- [ ] Real-time document sync
-- [ ] User authentication
-- [ ] Advanced filtering
-- [ ] Export search results
-- [ ] Analytics dashboard
-- [ ] Mobile app
+## 🎓 Educational Project
+
+**Institution:** GIET University, Gunupur, Odisha  
+**Program:** Computer Science Engineering (6th Semester)  
+**Developer:** Praveen Sharma
+
+### Learning Outcomes
+✅ Full-stack web development  
+✅ AI/ML integration (RAG, embeddings)  
+✅ RESTful API design with FastAPI  
+✅ Database management (MongoDB)  
+✅ JWT authentication & security  
+✅ Modern UI/UX development  
+
+---
 
 ## 🤝 Contributing
 
 Contributions are welcome! Please:
 
 1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 👨‍💻 Author
-
-**Your Name**
-- GitHub: [@yourusername](https://github.com/praveensharma20)
-- LinkedIn: [Your Name](https://www.linkedin.com/in/praveen-kumar1828/)
-
-## 🙏 Acknowledgments
-
-- [FastAPI](https://fastapi.tiangolo.com/)
-- [MongoDB Atlas](https://www.mongodb.com/atlas)
-- [OpenAI](https://openai.com/)
-- [Groq](https://groq.com/)
-- [LangChain](https://langchain.com/)
-
-## 📞 Support
-
-For issues and questions:
-- Open an issue on GitHub
-- Email: praveenjit8484@gmail.com
+2. Create feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open Pull Request
 
 ---
 
-⭐ **Star this repo if you find it helpful!**
+## 📄 License
+
+This project is licensed under the MIT License - see LICENSE file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Praveen Sharma**
+
+- 🐙 GitHub: [@praveensharma20](https://github.com/praveensharma20)
+- 💼 LinkedIn: [Praveen Kumar](https://www.linkedin.com/in/praveen-kumar1828/)
+- 📧 Email: praveenjit8484@gmail.com
+- 🏫 Institution: GIET University, Odisha
+
+---
+
+## 🙏 Acknowledgments
+
+- [FastAPI](https://fastapi.tiangolo.com/) - Modern Python web framework
+- [MongoDB](https://www.mongodb.com/) - Flexible document database
+- [Sentence Transformers](https://www.sbert.net/) - State-of-the-art embeddings
+- [Google Gemini](https://deepmind.google/technologies/gemini/) - AI language model
+- [Font Awesome](https://fontawesome.com/) - Beautiful icons
+
+---
+
+## 📞 Support
+
+- 📧 Email: praveenjit8484@gmail.com
+- 🐛 Issues: [GitHub Issues](https://github.com/praveensharma20/enterprise-ai-search/issues)
+- 💬 Discussions: [GitHub Discussions](https://github.com/praveensharma20/enterprise-ai-search/discussions)
+
+---
+
+<div align="center">
+
+**⭐ Star this repo if you find it helpful!**
+
+Made with ❤️ by Praveen Sharma | GIET University
+
+[⬆ Back to Top](#-enterprise-ai-search-system)
+
+</div>
+

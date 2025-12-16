@@ -22,13 +22,16 @@ from app.embedding_service import embedding_service
 from app.search_service import search_service
 from app.rag_service import rag_service
 
+# ✅ ADD: Import auth routes
+from app.auth import routes as auth_routes
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="Semantic Document Search API",
-    description="AI-powered document search with RAG",
+    title="Enterprise AI Search System",
+    description="AI-powered document search with RAG and authentication",
     version="1.0.0"
 )
 
@@ -51,10 +54,14 @@ doc_processor = DocumentProcessor(
     chunk_overlap=settings.chunk_overlap
 )
 
+# ✅ ADD: Setup auth database and router
+#auth_routes.db = db.db
+app.include_router(auth_routes.router)
+
 @app.on_event("startup")
 async def startup_event():
     """Connect to database on startup"""
-    logger.info("🚀 Starting Semantic Document Search API...")
+    logger.info("🚀 Starting Enterprise AI Search System...")
     db.connect()
     logger.info("✅ API is ready!")
 
@@ -68,9 +75,10 @@ async def shutdown_event():
 async def root():
     """Root endpoint"""
     return {
-        "message": "Semantic Document Search API",
+        "message": "Enterprise AI Search System API",
         "version": "1.0.0",
-        "status": "running"
+        "status": "running",
+        "features": ["Document Upload", "Semantic Search", "RAG", "Authentication"]
     }
 
 @app.get("/health", response_model=HealthCheckResponse, tags=["Health"])
@@ -170,7 +178,7 @@ async def upload_document(file: UploadFile = File(...)):
     except Exception as e:
         logger.error(f"❌ Error uploading document: {e}")
         # Clean up file if it exists
-        if os.path.exists(file_path):
+        if 'file_path' in locals() and os.path.exists(file_path):
             os.remove(file_path)
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -230,7 +238,7 @@ async def list_documents():
             DocumentMetadata(
                 document_id=doc['_id'],
                 file_name=doc.get('file_name', 'Unknown'),
-                file_size=0,  # Can be added from metadata
+                file_size=0,
                 upload_date=doc.get('upload_date', datetime.utcnow()),
                 total_chunks=doc.get('total_chunks', 0)
             )
