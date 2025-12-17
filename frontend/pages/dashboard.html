@@ -9,7 +9,12 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle-btn" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+        </button>
+        
         <div class="sidebar-header">
             <i class="fas fa-brain"></i>
             <span class="sidebar-title">Enterprise AI</span>
@@ -46,7 +51,7 @@
                     <p class="user-email">praveen@giet.edu</p>
                 </div>
             </div>
-            <button class="btn-logout">
+            <button class="btn-logout" onclick="logout()">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
@@ -68,12 +73,60 @@
             <div class="header-actions">
                 <div class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
                 </div>
+                
                 <div class="notification-icon">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">3</span>
                 </div>
-                <img src="https://ui-avatars.com/api/?name=Praveen+Sharma&background=7C3AED&color=fff" alt="User" class="header-avatar">
+                
+                <!-- User Profile Dropdown -->
+                <div class="user-menu-container">
+                    <div class="header-avatar" id="userAvatar">
+                        <span>PS</span>
+                    </div>
+                    
+                    <!-- User Dropdown Menu -->
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <div class="dropdown-avatar">PS</div>
+                            <div class="dropdown-user-info">
+                                <p class="dropdown-name">Praveen Kumar</p>
+                                <p class="dropdown-email" id="dropdownEmail">praveenjit828@gmail.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="dropdown-divider"></div>
+                        
+                        <a href="#" class="dropdown-item" onclick="showProfileSection(); return false;">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                        </a>
+                        
+                        <a href="#" class="dropdown-item" onclick="navigateTo('settings'); return false;">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        
+                        <a href="#" class="dropdown-item" onclick="navigateTo('analytics'); return false;">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Analytics</span>
+                        </a>
+                        
+                        <a href="#" class="dropdown-item" onclick="navigateTo('documents'); return false;">
+                            <i class="fas fa-folder"></i>
+                            <span>My Documents</span>
+                        </a>
+                        
+                        <div class="dropdown-divider"></div>
+                        
+                        <a href="#" class="dropdown-item danger" onclick="logout(); return false;">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
 
@@ -86,7 +139,7 @@
                 <div class="welcome-section">
                     <div>
                         <h1>Welcome back, Praveen! 👋</h1>
-                        <p class="welcome-date">Monday, December 15, 2025</p>
+                        <p class="welcome-date">Wednesday, December 17, 2025</p>
                     </div>
                 </div>
 

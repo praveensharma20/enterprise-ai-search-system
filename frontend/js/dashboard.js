@@ -1,23 +1,27 @@
 // API Configuration
 const API_BASE_URL = 'http://localhost:8000';
 
-// Check if user is authenticated
+// ========================================
+// 🚀 MAIN INITIALIZATION
+// ========================================
+
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('Dashboard initializing...');
+    
+    // Check authentication
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     
     if (!token) {
-        // Redirect to login if not authenticated
         window.location.href = 'login.html';
         return;
     }
     
-    // Update user info in sidebar
+    // Update user info
     if (user.full_name) {
         document.querySelector('.user-name').textContent = user.full_name;
         document.querySelector('.user-email').textContent = user.email;
         
-        // Update welcome message
         const welcomeHeader = document.querySelector('.welcome-section h1');
         if (welcomeHeader) {
             welcomeHeader.textContent = `Welcome back, ${user.full_name.split(' ')[0]}! 👋`;
@@ -32,15 +36,177 @@ document.addEventListener('DOMContentLoaded', function() {
         dateElement.textContent = currentDate;
     }
     
-    // Initialize dashboard features
-    loadDocuments();
-    setupEventListeners();
-    setupSectionNavigation();
+    // Initialize all features
+    setupSidebarToggle();
+    setupUserDropdown();
     setupThemeToggle();
+    setupSectionNavigation();
+    setupEventListeners();
+    loadDocuments();
     updateDocumentCount();
+    
+    console.log('Dashboard initialized successfully!');
 });
 
-// ✅ Section Navigation
+// Keyboard shortcut: Ctrl+B to toggle sidebar
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 'b') {
+        e.preventDefault();
+        const toggleBtn = document.getElementById('sidebarToggle');
+        if (toggleBtn) toggleBtn.click();
+    }
+});
+
+// ========================================
+// 🎯 SIDEBAR TOGGLE FUNCTIONALITY
+// ========================================
+
+function setupSidebarToggle() {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const body = document.body;
+    
+    if (!sidebar || !sidebarToggle) {
+        console.warn('Sidebar or toggle button not found');
+        return;
+    }
+    
+    sidebarToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        sidebar.classList.toggle('collapsed');
+        body.classList.toggle('sidebar-collapsed');
+        
+        const isCollapsed = sidebar.classList.contains('collapsed');
+        localStorage.setItem('sidebarCollapsed', isCollapsed);
+        
+        const icon = sidebarToggle.querySelector('i');
+        if (isCollapsed) {
+            icon.classList.remove('fa-bars');
+            icon.classList.add('fa-angles-right');
+        } else {
+            icon.classList.remove('fa-angles-right');
+            icon.classList.add('fa-bars');
+        }
+    });
+    
+    // Load saved sidebar state
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    if (savedState === 'true') {
+        sidebar.classList.add('collapsed');
+        body.classList.add('sidebar-collapsed');
+        const icon = sidebarToggle.querySelector('i');
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-angles-right');
+    }
+    
+    console.log('Sidebar toggle initialized');
+}
+
+// ========================================
+// 👤 USER PROFILE DROPDOWN
+// ========================================
+
+function setupUserDropdown() {
+    const userAvatar = document.getElementById('userAvatar');
+    const userDropdown = document.getElementById('userDropdown');
+    
+    if (!userAvatar || !userDropdown) {
+        console.warn('User dropdown elements not found');
+        return;
+    }
+    
+    // Toggle dropdown on avatar click
+    userAvatar.addEventListener('click', function(e) {
+        e.stopPropagation();
+        userDropdown.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!userAvatar.contains(e.target) && !userDropdown.contains(e.target)) {
+            userDropdown.classList.remove('show');
+        }
+    });
+    
+    // Load user email from localStorage
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    const dropdownEmail = document.getElementById('dropdownEmail');
+    if (dropdownEmail && userData.email) {
+        dropdownEmail.textContent = userData.email;
+    }
+    
+    console.log('User dropdown initialized');
+}
+
+function showProfileSection() {
+    const userDropdown = document.getElementById('userDropdown');
+    if (userDropdown) {
+        userDropdown.classList.remove('show');
+    }
+    showNotification('Profile section coming soon!', 'info');
+}
+
+function navigateTo(section) {
+    const userDropdown = document.getElementById('userDropdown');
+    if (userDropdown) {
+        userDropdown.classList.remove('show');
+    }
+    const navItem = document.querySelector(`[data-section="${section}"]`);
+    if (navItem) {
+        navItem.click();
+    }
+}
+
+function logout() {
+    const userDropdown = document.getElementById('userDropdown');
+    if (userDropdown) {
+        userDropdown.classList.remove('show');
+    }
+    
+    if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        showNotification('Logged out successfully!', 'success');
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1000);
+    }
+}
+
+// ========================================
+// 🌙 THEME TOGGLE
+// ========================================
+
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+    const body = document.body;
+    
+    if (!themeToggle) {
+        console.warn('Theme toggle not found');
+        return;
+    }
+    
+    themeToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        body.classList.toggle('dark-mode');
+        
+        const isDark = body.classList.contains('dark-mode');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+    }
+    
+    console.log('Theme toggle initialized');
+}
+
+// ========================================
+// 📑 SECTION NAVIGATION
+// ========================================
+
 function setupSectionNavigation() {
     document.querySelectorAll('.nav-item').forEach(item => {
         item.addEventListener('click', function(e) {
@@ -66,7 +232,10 @@ function setupSectionNavigation() {
     });
 }
 
-// ✅ Setup all event listeners
+// ========================================
+// 🎯 EVENT LISTENERS
+// ========================================
+
 function setupEventListeners() {
     // Primary upload button (Quick Actions)
     const uploadBtn = document.getElementById('uploadBtn');
@@ -112,21 +281,12 @@ function setupEventListeners() {
             }
         });
     }
-    
-    // Logout button
-    const logoutBtn = document.querySelector('.btn-logout');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('user');
-                window.location.href = 'login.html';
-            }
-        });
-    }
 }
 
-// ✅ Handle file upload
+// ========================================
+// 📤 FILE UPLOAD
+// ========================================
+
 async function handleFileUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -159,11 +319,10 @@ async function handleFileUpload(event) {
         
         if (response.ok) {
             showNotification(`Document "${file.name}" uploaded successfully! Processing ${data.chunks_created} chunks.`, 'success');
-            loadDocuments(); // Reload document list
-            updateDocumentCount(); // Update stats
-            event.target.value = ''; // Clear file input
+            loadDocuments();
+            updateDocumentCount();
+            event.target.value = '';
             
-            // Switch to documents section
             setTimeout(() => {
                 document.querySelector('[data-section="documents"]')?.click();
             }, 1000);
@@ -176,7 +335,10 @@ async function handleFileUpload(event) {
     }
 }
 
-// ✅ Unified search function
+// ========================================
+// 🔍 SEARCH
+// ========================================
+
 async function performSearch(query = null) {
     const searchQuery = query || document.getElementById('searchInput')?.value.trim();
     
@@ -206,7 +368,6 @@ async function performSearch(query = null) {
             displaySearchResults(data);
             showNotification(`Found ${data.total_results} results`, 'success');
             
-            // Switch to search section if not already there
             setTimeout(() => {
                 document.querySelector('[data-section="search"]')?.click();
             }, 300);
@@ -219,7 +380,6 @@ async function performSearch(query = null) {
     }
 }
 
-// ✅ Display search results
 function displaySearchResults(data) {
     const resultsContainer = document.getElementById('searchResults');
     if (!resultsContainer) return;
@@ -264,7 +424,10 @@ function displaySearchResults(data) {
     }
 }
 
-// ✅ Load documents
+// ========================================
+// 📄 DOCUMENTS
+// ========================================
+
 async function loadDocuments() {
     const documentsContainer = document.getElementById('documentsList');
     if (!documentsContainer) return;
@@ -285,13 +448,9 @@ async function loadDocuments() {
     }
 }
 
-// ✅ FIXED: Display documents (handles both _id and document_id)
 function displayDocuments(documents) {
     const documentsContainer = document.getElementById('documentsList');
-    if (!documentsContainer) {
-        console.error('documentsContainer not found!');
-        return;
-    }
+    if (!documentsContainer) return;
     
     if (!documents || documents.length === 0) {
         documentsContainer.innerHTML = `
@@ -313,20 +472,15 @@ function displayDocuments(documents) {
         const docCard = document.createElement('div');
         docCard.className = 'document-card';
         
-        // ✅ FIX: Safely get file name
         const fileName = doc.file_name || 'Unknown';
         
-        // Determine file icon
         let iconClass = 'fa-file';
         if (fileName.endsWith('.pdf')) iconClass = 'fa-file-pdf';
         else if (fileName.endsWith('.docx')) iconClass = 'fa-file-word';
         else if (fileName.endsWith('.txt')) iconClass = 'fa-file-alt';
         
-        // ✅ FIX: Handle both _id and document_id, with safety checks
         const documentId = doc.document_id || doc._id || 'unknown';
         const displayId = String(documentId).substring(0, 8);
-        
-        // ✅ FIX: Safely get date
         const uploadDate = doc.upload_date ? new Date(doc.upload_date).toLocaleDateString() : 'Unknown date';
         
         docCard.innerHTML = `
@@ -346,7 +500,6 @@ function displayDocuments(documents) {
     });
 }
 
-// ✅ Delete document
 async function deleteDocument(documentId, fileName) {
     if (!confirm(`Are you sure you want to delete "${fileName}"?`)) return;
     
@@ -372,7 +525,6 @@ async function deleteDocument(documentId, fileName) {
     }
 }
 
-// ✅ Update document count in stats
 async function updateDocumentCount(count = null) {
     const totalDocsElement = document.getElementById('totalDocs');
     if (!totalDocsElement) return;
@@ -392,16 +544,16 @@ async function updateDocumentCount(count = null) {
     }
 }
 
-// ✅ Show notification
+// ========================================
+// 🔔 NOTIFICATIONS
+// ========================================
+
 function showNotification(message, type = 'info') {
-    // Remove existing notifications
     document.querySelectorAll('.notification').forEach(n => n.remove());
     
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     
-    // Add icon based on type
     let icon = '💬';
     if (type === 'success') icon = '✅';
     else if (type === 'error') icon = '❌';
@@ -410,49 +562,12 @@ function showNotification(message, type = 'info') {
     
     notification.innerHTML = `<span>${icon}</span><span>${message}</span>`;
     
-    // Add to page
     document.body.appendChild(notification);
     
-    // Show notification
     setTimeout(() => notification.classList.add('show'), 100);
     
-    // Hide and remove after 3 seconds
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
     }, 3000);
-}
-
-// ✅ Theme Toggle
-function setupThemeToggle() {
-    const themeToggle = document.getElementById('themeToggle');
-    const body = document.body;
-    
-    if (!themeToggle) return;
-    
-    themeToggle.addEventListener('click', function() {
-        body.classList.toggle('dark-mode');
-        
-        const icon = this.querySelector('i');
-        if (body.classList.contains('dark-mode')) {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-            localStorage.setItem('theme', 'dark');
-        } else {
-            icon.classList.remove('fa-sun');
-            icon.classList.add('fa-moon');
-            localStorage.setItem('theme', 'light');
-        }
-    });
-    
-    // Load saved theme
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        body.classList.add('dark-mode');
-        const icon = themeToggle.querySelector('i');
-        if (icon) {
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
-        }
-    }
 }
