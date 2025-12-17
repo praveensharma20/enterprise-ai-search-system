@@ -292,7 +292,12 @@ function setupSectionNavigation() {
             if (targetSection) {
                 targetSection.classList.add('active');
                 
-                // Reload data for specific sections
+                // ✅ Reload analytics iframe when switching to analytics section
+                if (section === 'analytics') {
+                    reloadAnalyticsFrame();
+                }
+                
+                // Reload data for documents section
                 if (section === 'documents') {
                     loadDocuments();
                 }
@@ -301,6 +306,16 @@ function setupSectionNavigation() {
     });
     
     console.log('✅ Section navigation initialized');
+}
+
+// ✅ ANALYTICS IFRAME RELOAD
+function reloadAnalyticsFrame() {
+    const analyticsFrame = document.getElementById('analyticsFrame');
+    if (analyticsFrame) {
+        // Reload the iframe to get fresh data
+        analyticsFrame.src = analyticsFrame.src;
+        console.log('📊 Analytics iframe reloaded');
+    }
 }
 
 // ========================================
