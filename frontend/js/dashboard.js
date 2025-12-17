@@ -17,14 +17,49 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Update user info
+    // Update user info in all locations
     if (user.full_name) {
-        document.querySelector('.user-name').textContent = user.full_name;
-        document.querySelector('.user-email').textContent = user.email;
+        // Sidebar user info
+        const userName = document.querySelector('.user-name');
+        const userEmail = document.querySelector('.user-email');
+        if (userName) userName.textContent = user.full_name;
+        if (userEmail) userEmail.textContent = user.email;
         
+        // Dropdown user info
+        const dropdownName = document.getElementById('dropdownName');
+        const dropdownEmail = document.getElementById('dropdownEmail');
+        if (dropdownName) dropdownName.textContent = user.full_name;
+        if (dropdownEmail) dropdownEmail.textContent = user.email;
+        
+        // Header avatar initials
+        const headerAvatar = document.getElementById('userAvatar');
+        if (headerAvatar && !headerAvatar.querySelector('img')) {
+            const initials = user.full_name
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+            headerAvatar.textContent = initials;
+        }
+        
+        // Dropdown avatar initials
+        const dropdownAvatar = document.querySelector('.dropdown-avatar');
+        if (dropdownAvatar && !dropdownAvatar.querySelector('img')) {
+            const initials = user.full_name
+                .split(' ')
+                .map(n => n[0])
+                .join('')
+                .toUpperCase()
+                .substring(0, 2);
+            dropdownAvatar.textContent = initials;
+        }
+        
+        // Welcome message
         const welcomeHeader = document.querySelector('.welcome-section h1');
         if (welcomeHeader) {
-            welcomeHeader.textContent = `Welcome back, ${user.full_name.split(' ')[0]}! 👋`;
+            const firstName = user.full_name.split(' ')[0];
+            welcomeHeader.textContent = `Welcome back, ${firstName}! 👋`;
         }
     }
     
@@ -44,16 +79,36 @@ document.addEventListener('DOMContentLoaded', function() {
     setupEventListeners();
     loadDocuments();
     updateDocumentCount();
+    updateSearchCount();
     
-    console.log('Dashboard initialized successfully!');
+    // Initialize glassmorphism effects after DOM is ready
+    setTimeout(() => {
+        setupCursorGlow();
+        setup3DTilt();
+        setupMagneticButtons();
+        console.log('✨ Glassmorphism effects initialized');
+    }, 500);
+    
+    console.log('✅ Dashboard initialized successfully!');
 });
 
-// Keyboard shortcut: Ctrl+B to toggle sidebar
+// Keyboard shortcuts
 document.addEventListener('keydown', function(e) {
+    // Ctrl+B to toggle sidebar
     if (e.ctrlKey && e.key === 'b') {
         e.preventDefault();
         const toggleBtn = document.getElementById('sidebarToggle');
         if (toggleBtn) toggleBtn.click();
+    }
+    
+    // Ctrl+K to focus search
+    if (e.ctrlKey && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.focus();
+            searchInput.select();
+        }
     }
 });
 
@@ -99,7 +154,7 @@ function setupSidebarToggle() {
         icon.classList.add('fa-angles-right');
     }
     
-    console.log('Sidebar toggle initialized');
+    console.log('✅ Sidebar toggle initialized');
 }
 
 // ========================================
@@ -119,6 +174,7 @@ function setupUserDropdown() {
     userAvatar.addEventListener('click', function(e) {
         e.stopPropagation();
         userDropdown.classList.toggle('show');
+        console.log('Dropdown toggled:', userDropdown.classList.contains('show'));
     });
     
     // Close dropdown when clicking outside
@@ -128,14 +184,14 @@ function setupUserDropdown() {
         }
     });
     
-    // Load user email from localStorage
-    const userData = JSON.parse(localStorage.getItem('user') || '{}');
-    const dropdownEmail = document.getElementById('dropdownEmail');
-    if (dropdownEmail && userData.email) {
-        dropdownEmail.textContent = userData.email;
-    }
+    // Close dropdown on ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            userDropdown.classList.remove('show');
+        }
+    });
     
-    console.log('User dropdown initialized');
+    console.log('✅ User dropdown initialized');
 }
 
 function showProfileSection() {
@@ -166,6 +222,8 @@ function logout() {
     if (confirm('Are you sure you want to logout?')) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('theme');
+        localStorage.removeItem('sidebarCollapsed');
         showNotification('Logged out successfully!', 'success');
         setTimeout(() => {
             window.location.href = 'login.html';
@@ -192,6 +250,12 @@ function setupThemeToggle() {
         
         const isDark = body.classList.contains('dark-mode');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        
+        // Add a subtle animation feedback
+        this.style.transform = 'rotate(360deg)';
+        setTimeout(() => {
+            this.style.transform = '';
+        }, 300);
     });
     
     // Load saved theme
@@ -200,7 +264,7 @@ function setupThemeToggle() {
         body.classList.add('dark-mode');
     }
     
-    console.log('Theme toggle initialized');
+    console.log('✅ Theme toggle initialized');
 }
 
 // ========================================
@@ -227,9 +291,16 @@ function setupSectionNavigation() {
             const targetSection = document.getElementById(`section-${section}`);
             if (targetSection) {
                 targetSection.classList.add('active');
+                
+                // Reload data for specific sections
+                if (section === 'documents') {
+                    loadDocuments();
+                }
             }
         });
     });
+    
+    console.log('✅ Section navigation initialized');
 }
 
 // ========================================
@@ -257,9 +328,20 @@ function setupEventListeners() {
     const searchInput = document.getElementById('searchInput');
     
     if (searchBtn && searchInput) {
-        searchBtn.addEventListener('click', () => performSearch());
+        searchBtn.addEventListener('click', () => {
+            const query = searchInput.value.trim();
+            if (query) {
+                performSearch(query);
+            }
+        });
+        
         searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') performSearch();
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    performSearch(query);
+                }
+            }
         });
     }
     
@@ -277,10 +359,15 @@ function setupEventListeners() {
         
         searchInputMain.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
-                searchBtnMain.click();
+                const query = searchInputMain.value.trim();
+                if (query) {
+                    performSearch(query);
+                }
             }
         });
     }
+    
+    console.log('✅ Event listeners initialized');
 }
 
 // ========================================
@@ -294,13 +381,15 @@ async function handleFileUpload(event) {
     // Validate file type
     const allowedTypes = ['application/pdf', 'text/plain', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
     if (!allowedTypes.includes(file.type) && !file.name.match(/\.(pdf|txt|docx)$/i)) {
-        showNotification('Only PDF, TXT, and DOCX files are supported', 'error');
+        showNotification('❌ Only PDF, TXT, and DOCX files are supported', 'error');
+        event.target.value = '';
         return;
     }
     
     // Validate file size (10MB)
     if (file.size > 10 * 1024 * 1024) {
-        showNotification('File size must be less than 10MB', 'error');
+        showNotification('❌ File size must be less than 10MB', 'error');
+        event.target.value = '';
         return;
     }
     
@@ -308,7 +397,7 @@ async function handleFileUpload(event) {
     formData.append('file', file);
     
     try {
-        showNotification('Uploading document...', 'info');
+        showNotification('📤 Uploading document...', 'info');
         
         const response = await fetch(`${API_BASE_URL}/upload`, {
             method: 'POST',
@@ -318,20 +407,23 @@ async function handleFileUpload(event) {
         const data = await response.json();
         
         if (response.ok) {
-            showNotification(`Document "${file.name}" uploaded successfully! Processing ${data.chunks_created} chunks.`, 'success');
+            showNotification(`✅ Document "${file.name}" uploaded successfully! Processing ${data.chunks_created} chunks.`, 'success');
             loadDocuments();
             updateDocumentCount();
             event.target.value = '';
             
+            // Navigate to documents section after 1 second
             setTimeout(() => {
                 document.querySelector('[data-section="documents"]')?.click();
             }, 1000);
         } else {
-            showNotification(data.detail || 'Upload failed', 'error');
+            showNotification(`❌ ${data.detail || 'Upload failed'}`, 'error');
+            event.target.value = '';
         }
     } catch (error) {
         console.error('Upload error:', error);
-        showNotification('Error uploading document. Please try again.', 'error');
+        showNotification('❌ Error uploading document. Please check your connection.', 'error');
+        event.target.value = '';
     }
 }
 
@@ -343,12 +435,12 @@ async function performSearch(query = null) {
     const searchQuery = query || document.getElementById('searchInput')?.value.trim();
     
     if (!searchQuery) {
-        showNotification('Please enter a search query', 'warning');
+        showNotification('⚠️ Please enter a search query', 'warning');
         return;
     }
     
     try {
-        showNotification('Searching...', 'info');
+        showNotification('🔍 Searching...', 'info');
         
         const response = await fetch(`${API_BASE_URL}/search`, {
             method: 'POST',
@@ -366,17 +458,25 @@ async function performSearch(query = null) {
         
         if (response.ok) {
             displaySearchResults(data);
-            showNotification(`Found ${data.total_results} results`, 'success');
+            showNotification(`✅ Found ${data.total_results} results`, 'success');
+            updateSearchCount();
             
+            // Navigate to search section
             setTimeout(() => {
                 document.querySelector('[data-section="search"]')?.click();
             }, 300);
+            
+            // Update search input in search section
+            const searchInputMain = document.getElementById('searchInputMain');
+            if (searchInputMain) {
+                searchInputMain.value = searchQuery;
+            }
         } else {
-            showNotification(data.detail || 'Search failed', 'error');
+            showNotification(`❌ ${data.detail || 'Search failed'}`, 'error');
         }
     } catch (error) {
         console.error('Search error:', error);
-        showNotification('Error searching documents. Please try again.', 'error');
+        showNotification('❌ Error searching documents. Please check your connection.', 'error');
     }
 }
 
@@ -403,6 +503,7 @@ function displaySearchResults(data) {
         resultsTitle.textContent = '📄 Relevant Documents';
         resultsTitle.style.marginTop = '2rem';
         resultsTitle.style.marginBottom = '1rem';
+        resultsTitle.style.color = 'var(--text-color, #1F2937)';
         resultsContainer.appendChild(resultsTitle);
         
         data.results.forEach((result, index) => {
@@ -439,11 +540,18 @@ async function loadDocuments() {
         if (response.ok && data.documents) {
             displayDocuments(data.documents);
             updateDocumentCount(data.documents.length);
+        } else {
+            throw new Error(data.detail || 'Failed to load documents');
         }
     } catch (error) {
         console.error('Error loading documents:', error);
         if (documentsContainer) {
-            documentsContainer.innerHTML = '<p class="no-documents">Error loading documents</p>';
+            documentsContainer.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #EF4444;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p class="no-documents">Error loading documents. Please refresh the page.</p>
+                </div>
+            `;
         }
     }
 }
@@ -458,8 +566,8 @@ function displayDocuments(documents) {
                 <i class="fas fa-folder-open" style="font-size: 3rem; margin-bottom: 1rem;"></i>
                 <p class="no-documents">No documents uploaded yet</p>
                 <button onclick="document.getElementById('uploadBtn').click()" 
-                        style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: #7C3AED; color: white; border: none; border-radius: 8px; cursor: pointer;">
-                    Upload Your First Document
+                        style="margin-top: 1rem; padding: 0.8rem 1.5rem; background: #7C3AED; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                    <i class="fas fa-upload"></i> Upload Your First Document
                 </button>
             </div>
         `;
@@ -492,7 +600,7 @@ function displayDocuments(documents) {
                 <p>${doc.total_chunks || 0} chunks • Uploaded ${uploadDate}</p>
                 <small>ID: ${displayId}...</small>
             </div>
-            <button class="btn-delete" onclick="deleteDocument('${documentId}', '${fileName}')">
+            <button class="btn-delete" onclick="deleteDocument('${documentId}', '${fileName.replace(/'/g, "\\'")}')">
                 <i class="fas fa-trash"></i>
             </button>
         `;
@@ -504,7 +612,7 @@ async function deleteDocument(documentId, fileName) {
     if (!confirm(`Are you sure you want to delete "${fileName}"?`)) return;
     
     try {
-        showNotification('Deleting document...', 'info');
+        showNotification('🗑️ Deleting document...', 'info');
         
         const response = await fetch(`${API_BASE_URL}/documents/${documentId}`, {
             method: 'DELETE'
@@ -513,15 +621,15 @@ async function deleteDocument(documentId, fileName) {
         const data = await response.json();
         
         if (response.ok) {
-            showNotification('Document deleted successfully', 'success');
+            showNotification('✅ Document deleted successfully', 'success');
             loadDocuments();
             updateDocumentCount();
         } else {
-            showNotification(data.detail || 'Delete failed', 'error');
+            showNotification(`❌ ${data.detail || 'Delete failed'}`, 'error');
         }
     } catch (error) {
         console.error('Delete error:', error);
-        showNotification('Error deleting document', 'error');
+        showNotification('❌ Error deleting document', 'error');
     }
 }
 
@@ -544,11 +652,20 @@ async function updateDocumentCount(count = null) {
     }
 }
 
+async function updateSearchCount() {
+    const searchCountElement = document.getElementById('searchCount');
+    if (searchCountElement) {
+        const currentCount = parseInt(searchCountElement.textContent) || 0;
+        searchCountElement.textContent = currentCount + 1;
+    }
+}
+
 // ========================================
 // 🔔 NOTIFICATIONS
 // ========================================
 
 function showNotification(message, type = 'info') {
+    // Remove existing notifications
     document.querySelectorAll('.notification').forEach(n => n.remove());
     
     const notification = document.createElement('div');
@@ -569,5 +686,89 @@ function showNotification(message, type = 'info') {
     setTimeout(() => {
         notification.classList.remove('show');
         setTimeout(() => notification.remove(), 300);
-    }, 3000);
+    }, 3500);
 }
+
+// ========================================
+// ✨ GLASSMORPHISM CURSOR TRACKING
+// ========================================
+
+function setupCursorGlow() {
+    const cards = document.querySelectorAll('.stat-card, .content-card, .search-item');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            // Update CSS variables for glow position
+            card.style.setProperty('--glow-x', `${x - 100}px`);
+            card.style.setProperty('--glow-y', `${y - 100}px`);
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            card.style.removeProperty('--glow-x');
+            card.style.removeProperty('--glow-y');
+        });
+    });
+    
+    console.log('✨ Cursor glow tracking enabled on', cards.length, 'cards');
+}
+
+// 3D Tilt Effect
+function setup3DTilt() {
+    const cards = document.querySelectorAll('.stat-card, .content-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mousemove', function(e) {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            
+            const rotateX = ((y - centerY) / centerY) * 5; // Max 5deg rotation
+            const rotateY = ((centerX - x) / centerX) * 5;
+            
+            card.style.transform = `
+                perspective(1000px)
+                rotateX(${rotateX}deg)
+                rotateY(${rotateY}deg)
+                translateY(-8px)
+                scale(1.02)
+            `;
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            card.style.transform = '';
+        });
+    });
+    
+    console.log('✨ 3D tilt effect enabled on', cards.length, 'cards');
+}
+
+// Magnetic cursor effect for buttons
+function setupMagneticButtons() {
+    const buttons = document.querySelectorAll('.action-btn, button, .nav-item');
+    
+    buttons.forEach(button => {
+        button.addEventListener('mousemove', function(e) {
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            // Subtle magnetic pull (15% of distance)
+            button.style.transform = `translate(${x * 0.15}px, ${y * 0.15}px)`;
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            button.style.transform = '';
+        });
+    });
+    
+    console.log('✨ Magnetic effect enabled on', buttons.length, 'buttons');
+}
+
+console.log('📜 dashboard.js loaded successfully!');
