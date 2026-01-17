@@ -1,0 +1,25 @@
+# backend/requirements.txt
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+pymongo==4.6.1
+python-dotenv==1.0.0
+pydantic==2.5.3
+pydantic-settings==2.1.0
+PyPDF2==3.0.1
+python-docx==1.1.0
+langchain==0.1.0
+langchain-community==0.0.13
+langchain-openai==0.0.2
+openai==1.10.0
+sentence-transformers==2.3.1
+groq==0.4.1
+tiktoken==0.5.2
+numpy==1.26.3
+aiofiles==23.2.1
+
+# Email validator required by pydantic for EmailStr
+email-validator==1.3.1
+python-jose==3.3.0
+bcrypt==4.0.1
+motor==3.1.1
