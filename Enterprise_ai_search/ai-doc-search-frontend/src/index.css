@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  --bg-studio: #fbfbf9;       /* Off-white "Paper" base */
+  --panel-studio: #ffffff;    /* Pure white for foreground elements */
+  --border-studio: #e5e5e1;   /* Warm gray border */
+  --accent-premium: #0f172a;  /* Deep Slate for high-contrast text */
+  --accent-gold: #c5a36c;     /* Subtle "Luxury" accent */
+}
+
+/* Micro-Grid Background Pattern */
+.premium-grid-bg {
+  background-color: var(--bg-studio);
+  background-image: radial-gradient(#e5e5e1 0.8px, transparent 0.8px);
+  background-size: 24px 24px;
+}
+
+/* Soft "Lens Flare" for top-right texture */
+.premium-glow {
+  background: radial-gradient(circle at 80% 20%, rgba(197, 163, 108, 0.05) 0%, transparent 50%);
+}
+
+:root {
+  --bg-main: #fcfcfc;
+  --bg-sidebar: #0a0a0b;        /* Deep Obsidian for the sidebar */
+  --text-primary: #121212;
+  --text-on-dark: #f4f4f5;      /* White text for the dark sidebar */
+  --accent-intel: #2563eb;      /* The blue progress bar color */
+  --border-subtle: rgba(0, 0, 0, 0.06);
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.sidebar-animated-gradient {
+  /* A deep mix of Obsidian and a very faint Midnight Violet */
+  background: linear-gradient(-45deg, #0a0a0b, #0f0f12, #0a0a0b, #131318);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+.glass-accent-card {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar Movement Keyframes */
+@keyframes shimmer-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.sidebar-obsidian-gradient {
+  /* Transitioning between deep ink and a very faint midnight indigo */
+  background: linear-gradient(-45deg, #0a0a0b, #0e0e12, #0a0a0b, #111116);
+  background-size: 400% 400%;
+  animation: shimmer-shift 15s ease infinite;
+}
+
+.glass-status-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
