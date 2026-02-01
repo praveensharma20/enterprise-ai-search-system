@@ -20,7 +20,7 @@ build/
 *.pyc
 *.pyo
 *.pyd
-
+.env
 # Environment variables
 .env
 .env.local
